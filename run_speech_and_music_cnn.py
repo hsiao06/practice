@@ -3,7 +3,8 @@ import torch.nn as nn
 
 import matplotlib.pyplot as plt
 
-from fe_speech_and_music_kmeans import extract_log_mel_features, kmeans, n_mels, n_clusters
+from utils import extract_log_mel_features, kmeans
+from run_speech_and_music_kmeans import wav_file, target_sampling_rate, n_fft, n_mels, n_clusters
 
 # Setting
 out_channels = 32
@@ -48,8 +49,8 @@ def main():
     torch.manual_seed(seed)
     generator = torch.Generator().manual_seed(seed)
 
-    # Reuse the same log-mel features and k-means clusters as fe_speech_and_music_kmeans.py
-    log_mel_spec_avg, _ = extract_log_mel_features()  # (n_mels, n_frames)
+    # Reuse the same log-mel features and k-means clusters as run_speech_and_music_kmeans.py
+    log_mel_spec_avg, _ = extract_log_mel_features(wav_file, target_sampling_rate, n_fft, n_mels)
     features = log_mel_spec_avg.transpose(0, 1)  # (n_frames, n_mels)
     labels, _ = kmeans(features, n_clusters, generator=generator)  # (n_frames,), used as training targets
 
